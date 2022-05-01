@@ -1,0 +1,9 @@
+pw:123456aB@
+
+php.exe E:\xampp\htdocs\moodle\local\onlinejudge\cli\judged.php -v
+
+http://localhost/moodle/admin/cron.php
+
+git clone -b master git://github.com/hit-moodle/moodle-local_onlinejudge.git onlinejudge
+
+sudo wpa_supplicant -B -c /etc/wpa_supplicant/wpa_supplicant-nl80211-wlan0.conf -i wlan0
