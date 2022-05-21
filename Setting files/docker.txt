@@ -1,3 +1,7 @@
 docker run -itd -w /workspace -v /home/test1:/workspace -p 10000:10008 --net testnet --ip 172.18.0.2 --name test1 --device=/dev/ttyUSB1 ubuntu:custom bash
 
 docker run -itd -w /workspace -v /home/test2:/workspace -p 10001:10008 --net testnet --ip 172.18.0.3 --name test2 --device=/dev/ttyUSB3 ubuntu:custom bash
+
+docker run -itd -w /workspace -v /home/test3:/workspace -p 10002:10008 --net testnet --ip 172.18.0.4 --name test3 --device=/dev/ttyUSB5 ubuntu:custom bash
+
+docker run -itd -w /workspace -v /home/test1:/workspace -p 10000:10008 --net testnet --name test1 --device=/dev/ttyUSB1 ubuntu:custom bash

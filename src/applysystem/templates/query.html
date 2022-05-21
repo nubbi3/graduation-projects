@@ -1,0 +1,74 @@
+<html>
+  <head>
+    <title>U740 Query</title>
+    <meta ne="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <style>
+    .info {
+      padding: 20px 10px;
+      border:none;
+      text-align: center;
+      font-size: 200%;
+      background: rgb(41, 105, 176, 0.7);
+      color: rgb(255, 255, 255);
+      border-radius: 4px;
+    }
+
+    .button {
+      background-color: #4CAF50; /* Green */
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 20px;
+    }
+
+    .dialog {
+      width:100px;
+      height:20px;
+      border:1px solid #000;
+      text-align: left;
+      background: rgb(255, 255, 255);
+    }
+
+  </style>
+  <body style="background-color:rgb(248, 236, 182);">
+    <center>
+    <div class="container">
+      <br>
+      <span class="info">預約時間段及Port查詢</span><br><br><br>
+      輸入用戶名查詢
+      <form action="" method="post" onsubmit="onsubmit()">
+        <br>
+        用戶名：<input class="dialog" type="text" placeholder="用戶名" name="usr_name" value="{{ request.form.usr_name }}">
+        <br><br>
+        <input id="btn" class="button" type="submit" value="查詢">
+      </form>
+
+      {% if queries %}
+        <td>用戶 "{{ usr_name }}" 預約情況如下：</td><br>
+        {% for query in queries %}
+          <tr>
+            <td>時間段：{{ query[0] }} || Port: {{ query[1] }}</td><br>
+          </tr>
+        {% endfor %}
+      {% endif %}
+      
+      {% if no_query %}
+        <p>用戶 "{{ usr_name }}" 今天沒有任何預約！</p><br>
+      {% endif %}
+
+      {% if no_username %}
+        <p>請輸入用戶名！</p><br>
+      {% endif %}
+
+      {% if wrong_username %}
+        <p>請檢查用戶名稱 "{{ wrong_username }}" 是否正確！</p><br>
+      {% endif %}
+
+    </div>
+    </center>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title>U740 apply success</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <style>
+    .info {
+      padding: 20px 10px;
+      border:none;
+      text-align: center;
+      font-size: 200%;
+      background: rgb(41, 105, 176, 0.7);
+      color: rgb(255, 255, 255);
+      border-radius: 4px;
+    }
+
+    .button {
+      background-color: #4CAF50; /* Green */
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 20px;
+    }
+  </style>
+  <body style="background-color:rgb(248, 236, 182);">
+    <center>
+    <div class="container">
+      {% if port %}
+        <p class="info"><strong>分配成功，請使用該Port登陸Docker:</strong> {{ port }}
+      {% endif %}
+      <br><br>
+      <input class="button" type="button" name="Submit" onclick="javascript:history.back(-1);" value="返回上一頁">
+    </div>
+    </center>
+  </body>
+</html>
