@@ -45,103 +45,103 @@
         background: rgb(255, 150, 45);
     }
     .active{
-        background: rgb(224, 138, 57);
+        background: rgb(77, 179, 233);
     }
 </style>
 <body style="background-color:rgb(248, 236, 182);">
     <center>
         <form class="form-horizontal" method="post" id="test">
             <div style="border-width: 2px ; width: 250px; height: 20px ; padding: 5px; text-align: center; background-color: rgb(41, 105, 176, 0.7);border-radius: 4px;">
-                <span style="color: rgb(255, 255, 255);">請輸入用戶名並選擇申請時間段</span>
+                <span style="color: rgb(255, 255, 255);">请输入用户名并选择申请时间段</span>
             </div>
             <br>
-            <span style="color: rgb(0, 0, 0);">用戶名：</span><input class="dialog" type="text" placeholder="請輸入用戶名" id="usr_name" name="usr_name" value="{{ request.form.usr_name }}">
+            <span style="color: rgb(0, 0, 0);">用户名：</span><input class="dialog" type="text" placeholder="请输入用户名" id="usr_name" name="usr_name" value="{{ request.form.usr_name }}">
             <br><br>
             
             <table id="myTable">
                 
-                <tr onclick="displayResult(this)">
+                <tr>
                     {% if available1 %}
-                        <th>10:00 - 11:00 <br> 可用機器：{{ available1 }} 台</th>
+                        <th>10:00 - 11:00 <br> 可用机器：{{ available1 }} 台</th>
                     {% else %}
-                        <th>該時間段已過或已約滿</th>
+                        <th>该时间段已过或已约满</th>
                     {% endif %}
 
                     {% if available2 %}
-                        <th>11:00 - 12:00 <br> 可用機器：{{ available2 }} 台</th>
+                        <th>11:00 - 12:00 <br> 可用机器：{{ available2 }} 台</th>
                     {% else %}
-                        <th>該時間段已過或已約滿</th>
+                        <th>该时间段已过或已约满</th>
                     {% endif %}
 
                     {% if available3 %}
-                        <th>12:00 - 13:00 <br> 可用機器：{{ available3 }} 台</th>
+                        <th>12:00 - 13:00 <br> 可用机器：{{ available3 }} 台</th>
                     {% else %}
-                        <th>該時間段已過或已約滿</th>
+                        <th>该时间段已过或已约满</th>
                     {% endif %}
 
                     {% if available4 %}
-                        <th>13:00 - 14:00 <br> 可用機器：{{ available4 }} 台</th>
+                        <th>13:00 - 14:00 <br> 可用机器：{{ available4 }} 台</th>
                     {% else %}
-                        <th>該時間段已過或已約滿</th>
+                        <th>该时间段已过或已约满</th>
                     {% endif %}
                 </tr>
 
-                <tr onclick="displayResult(this)">
+                <tr>
                     {% if available5 %}
-                        <th>14:00 - 15:00 <br> 可用機器：{{ available5 }} 台</th>
+                        <th>14:00 - 15:00 <br> 可用机器：{{ available5 }} 台</th>
                     {% else %}
-                        <th>該時間段已過或已約滿</th>
+                        <th>该时间段已过或已约满</th>
                     {% endif %}
 
                     {% if available6 %}
-                        <th>15:00 - 16:00 <br> 可用機器：{{ available6 }} 台</th>
+                        <th>15:00 - 16:00 <br> 可用机器：{{ available6 }} 台</th>
                     {% else %}
-                        <th>該時間段已過或已約滿</th>
+                        <th>该时间段已过或已约满</th>
                     {% endif %}
 
                     {% if available7 %}
-                        <th>16:00 - 17:00 <br> 可用機器：{{ available7 }} 台</th>
+                        <th>16:00 - 17:00 <br> 可用机器：{{ available7 }} 台</th>
                     {% else %}
-                        <th>該時間段已過或已約滿</th>
+                        <th>该时间段已过或已约满</th>
                     {% endif %}
 
                     {% if available8 %}
-                        <th>17:00 - 18:00 <br> 可用機器：{{ available8 }} 台</th>
+                        <th>17:00 - 18:00 <br> 可用机器：{{ available8 }} 台</th>
                     {% else %}
-                        <th>該時間段已過或已約滿</th>
+                        <th>该时间段已过或已约满</th>
                     {% endif %}
                 </tr>
 
-                <tr onclick="displayResult(this)">
+                <tr>
                     {% if available9 %}
-                        <th>18:00 - 19:00 <br> 可用機器：{{ available9  }} 台</th>
+                        <th>18:00 - 19:00 <br> 可用机器：{{ available9  }} 台</th>
                     {% else %}
-                        <th>該時間段已過或已約滿</th>
+                        <th>该时间段已过或已约满</th>
                     {% endif %}
 
                     {% if available10 %}
-                        <th>19:00 - 20:00 <br> 可用機器：{{ available10 }} 台</th>
+                        <th>19:00 - 20:00 <br> 可用机器：{{ available10 }} 台</th>
                     {% else %}
-                        <th>該時間段已過或已約滿</th>
+                        <th>该时间段已过或已约满</th>
                     {% endif %}
 
                     {% if available11 %}
-                        <th>20:00 - 21:00 <br> 可用機器：{{ available11 }} 台</th>
+                        <th>20:00 - 21:00 <br> 可用机器：{{ available11 }} 台</th>
                     {% else %}
-                        <th>該時間段已過或已約滿</th>
+                        <th>该时间段已过或已约满</th>
                     {% endif %}
 
                     {% if available12 %}
-                        <th>21:00 - 22:00 <br> 可用機器：{{ available12 }} 台</th>
+                        <th>21:00 - 22:00 <br> 可用机器：{{ available12 }} 台</th>
                     {% else %}
-                        <th>該時間段已過或已約滿</th>
+                        <th>该时间段已过或已约满</th>
                     {% endif %}
                 </tr>
 
             </table>
             <br>
-            <input class="info" type="text" id="time_dialog" name="time_dialog" readonly="readonly" value="此處會顯示你所選擇的時間段信息">
-            <input class="button" class="btn btn-default" name="sub" type="submit" value="預約" id="sub">
+            <input class="info" type="text" id="time_dialog" name="time_dialog" readonly="readonly" value="此处会显示你所选择的时间段信息">
+            <input class="button" class="btn btn-default" name="sub" type="submit" value="预约" id="sub">
             
     </center>
 
@@ -153,15 +153,15 @@
         var usr_name = document.getElementById('usr_name').value;
         
         if(usr_name == "") {
-            alert('請輸入用戶名！');
+            alert('请输入用户名！');
         }
         
-        if(invalid == '此處會顯示你所選擇的時間段信息') {
-            alert('請選擇時間段！');
+        if(invalid == '此处会显示你所选择的时间段信息') {
+            alert('请选择时间段！');
         }
         
-        if(invalid != '此處會顯示你所選擇的時間段信息' && usr_name != "") {
-            return confirm('請確認你的用戶名為: ' + usr_name + '\n' + invalid + '\n如有錯請點擊取消');
+        if(invalid != '此处会显示你所选择的时间段信息' && usr_name != "") {
+            return confirm('请确认你的用户名为: ' + usr_name + '\n' + invalid + '\n如有错请点击取消');
         }
         return false;
     }
@@ -170,13 +170,13 @@
         $('th').on('click',function(){
             var period = $(this).text();
             
-            if (period != "該時間段已過或已約滿") {
+            if (period != "该时间段已过或已约满") {
             $('th').removeClass('active').addClass();
             $(this).addClass('active');
             period_start = $(this).index() + $(this).closest('tr').index() * 4 + 10;
             period_end   = $(this).index() + $(this).closest('tr').index() * 4 + 11;
 
-            document.getElementById("time_dialog").value = "你所選擇的時間段為: " + period_start + ":00 --" + period_end + ":00";
+            document.getElementById("time_dialog").value = "你所选择的时间段为: " + period_start + ":00 --" + period_end + ":00";
             }
             
         })

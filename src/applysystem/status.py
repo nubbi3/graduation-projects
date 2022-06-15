@@ -3,9 +3,10 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from datetime import datetime
 from time import localtime
 import database
-import docker_manage
+from my_docker import docker_manage
 from pathlib import Path
 import check
+import subprocess
 
 # 服務器啟動時間
 server_start_time = 9
@@ -30,122 +31,127 @@ log_name = str(t.tm_year) + '_' + str(t.tm_mon) + '_' + str(t.tm_mday) + '.log'
 
 # 到時前五分鐘提示
 def expired_remind():
-    now_docker_names = database.get_status()[0]
-    now_docker_names = [x for x in now_docker_names if x is not None]
+    now_user_names = database.get_status()[0]
+    now_user_names = [x for x in now_user_names if x is not None]
+    
+    if now_user_names:
+        for now_user_name in now_user_names:
+            check.expired_remind(now_user_name)
 
-    if now_docker_names:
-        for now_docker_name in now_docker_names:
-            check.expired_remind(now_docker_name)
-
-# 更新Docker
+# 更新時間表
 def update_machine():
     t = localtime()
     period = t.tm_hour - 9
 
+    
+    # 獲取下個時間段使用信息
+    next_user_names = database.get_timetable(period)[0]
+    # 判斷下個時間段是否有人使用，即時間表中是否為 'NULL'
+    next_user_exist = [x for x in next_user_names if x is not None]
+
     # 第一個時間段不用特殊判斷
     if period == 1:
-        docker_names = database.get_timetable(period)[0]
-        machine_no = 1
-        docker_names = [x for x in docker_names if x is not None]
+        
+        #user_names = [x for x in user_names if x is not None]
 
         # 如果預約時間表不為空，即有人預約
-        if docker_names:
-            for docker_name in docker_names:
-                if docker_name is not None:
-                    output = docker_manage.start_docker(docker_name)
+        if next_user_names:
+            for next_user_name in next_user_names:
+                if next_user_name is not None:
+                    port = database.get_port(next_user_name)
 
+                    machine_no = next_user_names.index(next_user_name) + 1
+
+                    output = docker_manage.start_docker(next_user_name, port, machine_no)
+                    
                     t = localtime()
 
                     # 記錄Docker啟動時間
-                    with open("./log/" + log_name, "a") as f:
+                    with open("/home/ubuntu/applysystem/log/" + log_name, "a") as f:
                         f.write('Start docker ' + output + ' at ' + str(t.tm_hour) + ':' + str(t.tm_min) + ':' + str(t.tm_sec) + '\n')
 
                     # 更新當前機器使用狀態
-                    database.update_status(period, machine_no, docker_name)
-                    machine_no += 1
+                    database.update_status(period, machine_no, next_user_name)
 
     # 之後的時間段，需要判斷 下個時間段有否預約，是否為同一人預約，是否使用同一機器
     else:
-        # 獲取下個時間段使用信息
-        next_docker_names = database.get_timetable(period)[0]
-        machine_no = 1
+        now_user_names = database.get_status()[0]
+        now_user_exist = [x for x in now_user_names if x is not None]
 
-        # 判斷下個時間段是否有人使用，即時間表中是否為 'NULL'
-        next_docker_names = [x for x in next_docker_names if x is not None]
-        
         # 下個時間段有人預約
-        if next_docker_names:
-            now_docker_names = database.get_status()[0]
-            now_docker_names = [x for x in now_docker_names if x is not None]
-
-            # 如果目前有機器有分配用戶
+        if next_user_exist:
+            # 如果目前機器有分配用戶
             # 則檢查下個時間段該用戶是否使用同一機器
-            # 若為同一機器則不中斷SSH連線，若不為同一機器則中斷SSH連線(停止 Docker)
-            if now_docker_names:
-                for now_docker_name in now_docker_names:
-                    # 不為同一機器
-                    if now_docker_name not in next_docker_names:
-                        user_name = now_docker_name[0:len(now_docker_name)-2]
-                        
-                        path = 'log/' + user_name
-                        Path(path).mkdir(parents=True, exist_ok=True)
+            # 若為同一機器則不中斷SSH連線，若不為同一機器則中斷SSH連線(停止Docker)
+            if now_user_exist:
+                for now_user_name in now_user_names:
+                    if now_user_name is not None:
+                        # 不為同一人
+                        if now_user_name not in next_user_names:
+                            
+                            t = localtime()
 
-                        t = localtime()
+                            machine_no = now_user_names.index(now_user_name) + 1
 
-                        # 停止Docker
-                        output = docker_manage.stop_docker(now_docker_name)
-                        
-                        # 記錄Docker停止時間
-                        with open("./log/" + log_name, "a") as f:
-                            f.write('Stop  docker ' + output + ' at ' + str(t.tm_hour) + ':' + str(t.tm_min) + ':' + str(t.tm_sec) + '\n')
+                            # 停止Docker
+                            output = docker_manage.stop_docker(now_user_name, machine_no)
+                            
+                            # 記錄Docker停止時間
+                            with open("/home/ubuntu/applysystem/log/" + log_name, "a") as f:
+                                f.write('Stop  docker ' + output + ' at ' + str(t.tm_hour) + ':' + str(t.tm_min) + ':' + str(t.tm_sec) + '\n')
+                        else:
+                            now_machine_no = now_user_names.index(now_user_name) + 1
+                            next_machine_no = next_user_names.index(now_user_name) + 1
 
-                        # 保存用戶操作記錄
-                        check.save_user_log(now_docker_name)
+                            if now_machine_no != next_machine_no:
+                                output = docker_manage.stop_docker(now_user_name, now_machine_no)
+
+                                with open("/home/ubuntu/applysystem/log/" + log_name, "a") as f:
+                                    f.write('Stop  docker ' + output + ' at ' + str(t.tm_hour) + ':' + str(t.tm_min) + ':' + str(t.tm_sec) + '\n')
+
             
             # 根據預約時間表啟動下個時間段的Docker
-            for next_docker_name in next_docker_names:
-                if next_docker_name is not None:
-                    output = docker_manage.start_docker(next_docker_name)
-
+            for next_user_name in next_user_names:
+                if next_user_name is not None and next_user_name not in now_user_names:
+                    
+                    port = database.get_port(next_user_name)
                     t = localtime()
-                    with open("./log/" + log_name, "a") as f:
+
+                    machine_no = next_user_names.index(next_user_name) + 1
+
+                    output = docker_manage.start_docker(next_user_name, port, machine_no)
+
+                    with open("/home/ubuntu/applysystem/log/" + log_name, "a") as f:
                         f.write('Start docker ' + output + ' at ' + str(t.tm_hour) + ':' + str(t.tm_min) + ':' + str(t.tm_sec) + '\n')
 
                     # 更新當前機器使用狀態
-                    database.update_status(period, machine_no, next_docker_name)
-                    machine_no += 1
+                    database.update_status(period, machine_no, next_user_name)
 
         # 下個時間段沒有預約
         else:
-            now_docker_names = database.get_status()[0]
-            now_docker_names = [x for x in now_docker_names if x is not None]
-            
             # 檢查當前分配的用戶是否正在使用 <-- 檢查SSH連線情況，如果SSH用戶為0，則Docker沒人使用
-            if now_docker_names:
-                for now_docker_name in now_docker_names:
-                    ssh_usr = check.check_alive(now_docker_name)
+            if now_user_exist:
+                for now_user_name in now_user_names:
+                    if now_user_name is not None:
+                        ssh_usr = check.check_alive(now_user_name)
 
-                    if ssh_usr == '0':
-                        user_name = now_docker_name[0:len(now_docker_name)-2]
-                        
-                        path = 'log/' + user_name
-                        Path(path).mkdir(parents=True, exist_ok=True)
-                        
-                        t = localtime()
-                        
-                        # 停止Docker
-                        output = docker_manage.stop_docker(now_docker_name)
+                        if ssh_usr == '0':
+                            
+                            t = localtime()
+                            
+                            machine_no = now_user_names.index(now_user_name) + 1
 
-                        with open("./log/" + log_name, "a") as f:
-                            f.write('Stop  docker ' + output + ' at ' + str(t.tm_hour) + ':' + str(t.tm_min) + ':' + str(t.tm_sec) + '\n')
+                            # 停止Docker
+                            output = docker_manage.stop_docker(now_user_name, machine_no)
 
-                        # 保存用戶操作記錄
-                        check.save_user_log(now_docker_name)
+                            with open("/home/ubuntu/applysystem/log/" + log_name, "a") as f:
+                                f.write('Stop  docker ' + output + ' at ' + str(t.tm_hour) + ':' + str(t.tm_min) + ':' + str(t.tm_sec) + '\n')
 
-                        # 更新當前機器使用狀態
-                        database.update_status(period, machine_no, 'NULL')
-                    
-                    machine_no += 1
+                            # 保存用戶操作記錄
+                            # check.save_user_log(now_user_name, machine_no)
+
+                            # 更新當前機器使用狀態
+                            database.update_status(period, machine_no, 'NULL')
 
 if __name__ == '__main__':
 

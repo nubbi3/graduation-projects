@@ -38,34 +38,34 @@
     <center>
     <div class="container">
       <br>
-      <span class="info">預約時間段及Port查詢</span><br><br><br>
-      輸入用戶名查詢
+      <span class="info">预约时间段及Port查询</span><br><br><br>
+      输入用户名查询
       <form action="" method="post" onsubmit="onsubmit()">
         <br>
-        用戶名：<input class="dialog" type="text" placeholder="用戶名" name="usr_name" value="{{ request.form.usr_name }}">
+        用户名：<input class="dialog" type="text" placeholder="用户名" name="usr_name" value="{{ request.form.usr_name }}">
         <br><br>
-        <input id="btn" class="button" type="submit" value="查詢">
+        <input id="btn" class="button" type="submit" value="查询">
       </form>
 
       {% if queries %}
-        <td>用戶 "{{ usr_name }}" 預約情況如下：</td><br>
+        <td>用户 "{{ usr_name }}" 预约情况如下：</td><br>
         {% for query in queries %}
           <tr>
-            <td>時間段：{{ query[0] }} || Port: {{ query[1] }}</td><br>
+            <td>时间段：{{ query[0] }} || Port: {{ query[1] }}</td><br>
           </tr>
         {% endfor %}
       {% endif %}
       
       {% if no_query %}
-        <p>用戶 "{{ usr_name }}" 今天沒有任何預約！</p><br>
+        <p>用户 "{{ usr_name }}" 今天没有任何预约！</p><br>
       {% endif %}
 
       {% if no_username %}
-        <p>請輸入用戶名！</p><br>
+        <p>请输入用户名！</p><br>
       {% endif %}
 
       {% if wrong_username %}
-        <p>請檢查用戶名稱 "{{ wrong_username }}" 是否正確！</p><br>
+        <p>请检查用户名称 "{{ wrong_username }}" 是否正确！</p><br>
       {% endif %}
 
     </div>

@@ -47,38 +47,38 @@
   <body style="background-color:rgb(248, 236, 182);">  
     <center>
     <div class="container">
-      <br><span class="info">申請需知</span><br><br><br>
-      該項目 (U740線上調試環境) 目前尚處於測試階段，請輸入用戶名以及SSH Key後點擊申請
+      <br><span class="info">申请需知</span><br><br><br>
+      该项目 (U740线上调试环境) 目前尚处于测试阶段，请输入用户名以及SSH Key后点击申请
       <form action="" method="post" onsubmit="document.getElementById('btn').disabled=true;">
         <br>
-        用戶名：<input type="text" placeholder="請輸入用戶名" name="usr_name" value="{{ request.form.usr_name }}">
+        用户名：<input type="text" placeholder="请输入用户名" name="usr_name" value="{{ request.form.usr_name }}">
         <br>
-        SSH Key：<input type="text" placeholder="請輸入SSH Key" name="ssh_key" value="{{ request.form.ssh_key }}">
+        SSH Key：<input type="text" placeholder="请输入SSH Key" name="ssh_key" value="{{ request.form.ssh_key }}">
         <br>
         {% if success %}
-          <p class="apply"><strong>用戶 "{{ success }}" 申請成功！若要使用機器請預約時間</strong>
+          <p class="apply"><strong>用户 "{{ success }}" 申请成功！若要使用机器请预约时间</strong>
         {% endif %}
         {% if fail %}
-          <p class="apply"><strong>系統錯誤，請重新申請</strong>
+          <p class="apply"><strong>系统错误，请重新申请</strong>
         {% endif %}
         
         <br>
         {% if not success %}
-        <input id="btn" class="button" type="submit" value="申請" onclick="showButtonEvent()">
+        <input id="btn" class="button" type="submit" value="申请" onclick="showButtonEvent()">
         {% endif %}
 
         {% if wrong_info %}
-          <p class="apply"><strong>請輸入用戶名以及SSH Key！</strong>
+          <p class="apply"><strong>请输入用户名以及SSH Key！</strong>
         {% endif %}
 
         {% if existed %}
-          <p class="apply"><strong>帳號 "{{ existed }}" 已存在</strong>
+          <p class="apply"><strong>该Moodle帐号已注册过</strong>
         {% endif %}
       </form>
       
       <br>
       <div id="Wait" style="display: none;">
-        <span class="info2">申請中，請稍等片刻</span>
+        <span class="info2">申请中，请稍等片刻</span>
       </div>
 
       
